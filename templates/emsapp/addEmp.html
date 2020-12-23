@@ -1,0 +1,51 @@
+{% extends "emsapp/emplist.html" %}
+{% block content %}
+    <div id="content">
+        <p id="whereami">
+        </p>
+        <h1>
+            add Emp info:
+        </h1>
+        <form action="{% url 'emsapp:addEmp_logic' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <table cellpadding="0" cellspacing="0" border="0"
+                   class="form_table">
+                <tr>
+                    <td valign="middle" align="right">
+                        name:
+                    </td>
+                    <td valign="middle" align="left">
+                        <input type="text" class="inputgri" name="name" id="name" />
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="middle" align="right">
+                        salary:
+                    </td>
+                    <td valign="middle" align="left">
+                        <input type="text" class="inputgri" name="salary" />
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="middle" align="right">
+                        age:
+                    </td>
+                    <td valign="middle" align="left">
+                        <input type="text" class="inputgri" name="age" />
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="middle" align="right">
+                        head_pic:
+                    </td>
+                    <td valign="middle" align="left">
+                        <input type="file" class="inputgri" name="head_pic" id/>
+                    </td>
+                </tr>
+            </table>
+            <p>
+                <input type="submit" class="button" value="Confirm" />
+            </p>
+        </form>
+    </div>
+{% endblock %}

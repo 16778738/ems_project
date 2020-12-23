@@ -1,0 +1,183 @@
+{% load static %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>emplist</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="{% static 'emsapp/css/style.css' %}"/>
+    <script src="{% static 'emsapp/js/jquery-1.11.1.min.js' %}"></script>
+    {% block script %}
+        <script>
+            $(document).ready(function () {
+                $("#query").click(function () {
+                    $.ajax({
+                        type: "GET",
+                        url: "{% url 'emsapp:query' %}",
+                        data: "s1=" + $("#s1").val(),
+                        success: function (c) {
+                            console.log(c);
+                            c = c['staff'];
+                            var str = '<tr><td>姓名</td><td>薪水</td><td>年龄</td></tr>';
+                            for (var i = 0; i < c.length; i++) {
+                                str += "<tr>";
+                                str += "<td>";
+                                str += c[i]['name'];
+                                str += "</td>";
+                                str += "<td>";
+                                str += c[i]['salary'];
+                                str += "</td>";
+                                str += "<td>";
+                                str += c[i]['age'];
+                                str += "</td>";
+                                str += "</tr>";
+                            }
+                            $("#t1")[0].innerHTML = str
+                        }
+                    })
+                })
+            })
+        </script>
+    {% endblock %}
+
+</head>
+<body>
+<div id="wrap">
+    <div id="top_content">
+        <div id="header">
+            <div id="rightheader">
+                <p>
+                    2009/11/20
+                    <br/>
+                </p>
+            </div>
+            <div id="topheader">
+                <h1 id="title">
+                    <a href="#">main</a>
+                </h1>
+            </div>
+            <div id="navigation">
+            </div>
+        </div>
+        {% block content %}
+            <div id="content">
+                <p id="whereami">
+                </p>
+                <h1>
+                    Welcome!
+                </h1>
+
+                <div>
+                    <input type="text" id="s1">
+                    <input type="button" value="搜索" id="query">
+                </div>
+                <table class="table" id="t1">
+                    <tr class="table_header">
+                        <td>
+                            ID
+                        </td>
+                        <td>
+                            Name
+                        </td>
+                        <td>
+                            Salary
+                        </td>
+                        <td>
+                            Age
+                        </td>
+                        <td>
+                            head_pic
+                        </td>
+                        <td>
+                            Operation
+                        </td>
+                    </tr>
+                    {% for i in page.object_list %}
+                        {% if forloop.counter|divisibleby:2 %}
+                            <tr class="row1" style="background-color: #ffffff">
+                                <td>
+                                    {{ forloop.counter }}
+                                </td>
+                                <td>
+                                    {{ i.name }}
+                                </td>
+                                <td>
+                                    {{ i.salary }}
+                                </td>
+                                <td>
+                                    {{ i.age }}
+                                </td>
+                                <td>
+                                    <img src="{% static i.head_pic.url %}" alt="图片加载失败" height="70px">
+                                </td>
+                                <td>
+                                    <a href="{% url "emsapp:delete" %}?id={{ i.id }}&num={{ page.number }}">delete emp</a>&nbsp;
+                                    <a href="{% url "emsapp:updateEmp" %}?id={{ i.id }}&num={{ page.number }}">update emp</a>
+                                </td>
+
+                            </tr>
+                        {% else %}
+                            <tr class="row2" style="background-color: #eeeeee">
+                                <td>
+                                    {{ forloop.counter }}
+                                </td>
+                                <td>
+                                    {{ i.name }}
+                                </td>
+                                <td>
+                                    {{ i.salary }}
+                                </td>
+                                <td>
+                                    {{ i.age }}
+                                </td>
+                                <td>
+                                    <img src="{% static i.head_pic.url %}" alt="图片加载失败" height="70px">
+                                </td>
+                                <td>
+                                    <a href="{% url "emsapp:delete" %}?id={{ i.id }}&num={{ page.number }}">delete emp</a>&nbsp;<a
+                                        href="{% url "emsapp:updateEmp" %}?id={{ i.id }}&num={{ page.number }}">update
+                                    emp</a>
+                                </td>
+
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+                {% if page.has_previous %}
+                    <a href="{% url 'emsapp:emplist_logic' %}?num={{ page.previous_page_number }}"> 上一页</a>
+                {% endif %}
+
+                {% for foo in page.paginator.page_range %}
+                    <a href="{% url 'emsapp:emplist_logic' %}?num={{ foo }}">
+                        {% if foo == page.number %}
+                            <span class="a">{{ foo }}</span>
+                        {% else %}
+                            <span class="b">{{ foo }}</span>
+                        {% endif %}
+                    </a>
+                {% endfor %}
+                {% if page.has_next %}
+                    <a href="{% url 'emsapp:emplist_logic' %}?num={{ page.next_page_number }}"> 下一页</a>
+                {% endif %}
+                {% if not page.paginator.num_pages == page.number %}
+                    <a href="{% url 'emsapp:emplist_logic' %}?num={{ page.paginator.num_pages }}">尾页</a>
+                {% endif %}
+
+                <form action="{% url 'emsapp:emplist_logic' %}" method="get">
+                    输入页号<input type="text" name="num">
+                    <input type="submit" value="跳转">
+                </form>
+                <p>
+                    <input type="button" class="button" value="Add Employee"
+                           onclick="location.href='{% url "emsapp:addEmp" %}?num={{ page.paginator.num_pages }}'"/>
+                </p>
+            </div>
+        {% endblock %}
+    </div>
+    <div id="footer">
+        <div id="footer_bg">
+            ABC@126.com
+        </div>
+    </div>
+</div>
+</body>
+</html>

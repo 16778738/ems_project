@@ -1,0 +1,96 @@
+{% extends "emsapp/emplist.html" %}
+{% load static %}
+{#{% block script %}#}
+{#    <script>#}
+{#        window.onload = function(){#}
+{#            if ("{{ emp }}"){#}
+{##}
+{#            }else {#}
+{#                alert("页面加载失败")#}
+{#                location.href="{% url 'emsapp:emplist_logic' %}"#}
+{#            }#}
+{#        }#}
+{##}
+{#        $(document).ready(function () {#}
+{#            $("#submit").click(function () {#}
+{#                var formdata = new FormData("form")[0];#}
+{#                $.ajax({#}
+{#                    type: "POST",#}
+{#                    url: "{% url 'emsapp:updareEmp_logic' %}",#}
+{#                    headers: {"X-CSRFtoken":$.cookie("csrftoken")},#}
+{#                    contentType: false,#}
+{#                    processData: false,#}
+{#                    data: formdata,#}
+{#                    success: function (msg) {#}
+{#                        console.log(msg);#}
+{#                        if (msg.error == 1) {#}
+{#                            alert(msg.msg)#}
+{#                        } else {#}
+{#                            location.href = "{% url 'emsapp:emplist_logic' %}";#}
+{#                            alert(msg.msg)#}
+{#                        }#}
+{#                    }#}
+{#                })#}
+{#            })#}
+{#        })#}
+{#    </script>#}
+{#{% endblock %}#}
+{% block content %}
+    <div id="content">
+        <p id="whereami">
+        </p>
+        <h1>
+            update Emp info:
+        </h1>
+        <form action="{% url "emsapp:updareEmp_logic" %}?id={{ staff.id }}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <table cellpadding="0" cellspacing="0" border="0"
+                   class="form_table">
+                <tr>
+                    <td valign="middle" align="right">
+                        id:
+                    </td>
+                    <td valign="middle" align="left">
+                        {{ staff.id }}
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="middle" align="right">
+                        name:
+                    </td>
+                    <td valign="middle" align="left">
+                        <input type="text" class="inputgri" name="name" value="{{ staff.name }}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="middle" align="right">
+                        salary:
+                    </td>
+                    <td valign="middle" align="left">
+                        <input type="text" class="inputgri" name="salary" value="{{ staff.salary }}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="middle" align="right">
+                        age:
+                    </td>
+                    <td valign="middle" align="left">
+                        <input type="text" class="inputgri" name="age" value="{{ staff.age }}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="middle" align="right">
+                        head_pic:
+                    </td>
+                    <td valign="middle" align="left">
+                        <img src="{% static staff.head_pic.url %}" alt="图片加载失败" height="70px">
+                        <input type="file" name="head_pic">
+                    </td>
+                </tr>
+            </table>
+            <p>
+                <input type="submit" class="button" value="Confirm"/>
+            </p>
+        </form>
+    </div>
+{% endblock %}

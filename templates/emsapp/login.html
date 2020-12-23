@@ -1,0 +1,61 @@
+{% extends "emsapp/emplist.html" %}
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            $("#submit").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'emsapp:login' %}",
+                    data: $("form").serialize(),
+                    success: function (msg) {
+                        console.log(msg);
+                        if (msg.error == 1) {
+                            alert(msg.msg)
+                        } else {
+                            location.href = "{% url 'emsapp:emplist_logic' %}"
+                        }
+                    }
+                })
+            })
+        })
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div id="content">
+        <p id="whereami">
+        </p>
+        <h1>
+            login
+        </h1>
+        <form action="" method="post" enctype="application/x-www-form-urlencoded">
+            {% csrf_token %}
+            <table cellpadding="0" cellspacing="0" border="0"
+                   class="form_table">
+                <tr>
+                    <td valign="middle" align="right">
+                        username:
+                    </td>
+                    <td valign="middle" align="left">
+                        <input type="text" class="inputgri" name="name" id="name"/>
+                        <span id="s1"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="middle" align="right">
+                        password:
+                    </td>
+                    <td valign="middle" align="left">
+                        <input type="password" class="inputgri" name="pwd" id="pwd"/>
+                    </td>
+                </tr>
+            </table>
+            <input type="checkbox" name="remember">记住我
+            <p>
+                <input type="button" id="submit" class="button" value="Submit &raquo;"/>
+                <input type="button" value="注册 &raquo;" class="button"
+                       onclick="location.href='{% url 'emsapp:regist' %}'"/>
+            </p>
+        </form>
+    </div>
+{% endblock %}

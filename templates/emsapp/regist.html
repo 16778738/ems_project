@@ -1,0 +1,101 @@
+{% extends "emsapp/emplist.html" %}
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            $(function () {
+                $("#a1").click(function () {
+                    $("#img1")[0].src = "{% url 'emsapp:getCaptcha' %}?" + new Date().getTime();
+
+                })
+            });
+            $("#submit").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'emsapp:regist_logic' %}",
+                    data: $("form").serialize(),
+                    success: function (msg) {
+                        console.log(msg);
+                        if (msg == 'ok') {
+                            location.href = "{% url 'emsapp:login1' %}"
+                        } else if (msg =='user_have') {
+                            alert("用户名已存在")
+                        }else if (msg == 'error') {
+                            $("#s1")[0].textContent = "验证码错误"
+                        }else {
+                            alert('输入错误')
+                        }
+                    }
+                })
+            })
+        })
+
+
+    </script>
+{% endblock %}
+{% block content %}
+    <div id="content">
+        <p id="whereami">
+        </p>
+        <h1>
+            注册
+        </h1>
+        <form action="" method="post" enctype="application/x-www-form-urlencoded">
+            {% csrf_token %}
+            <table cellpadding="0" cellspacing="0" border="0"
+                   class="form_table">
+                <tr>
+                    <td valign="middle" align="right">
+                        用户名:
+                    </td>
+                    <td valign="middle" align="left">
+                        <input type="text" class="inputgri" name="username" placeholder="请输入用户名"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="middle" align="right">
+                        真实姓名:
+                    </td>
+                    <td valign="middle" align="left">
+                        <input type="text" class="inputgri" name="name"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="middle" align="right">
+                        密码:
+                    </td>
+                    <td valign="middle" align="left">
+                        <input type="password" class="inputgri" name="pwd"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="middle" align="right">
+                        性别:
+                    </td>
+                    <td valign="middle" align="left">
+                        男
+                        <input type="radio" class="inputgri" name="sex" value="m" checked="checked"/>
+                        女
+                        <input type="radio" class="inputgri" name="sex" value="f"/>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td valign="middle" align="right">
+                        验证码:
+                        <img id="img1" src="{% url 'emsapp:getCaptcha' %}" width="70px"/>
+                        <a href="javascript:void(0)" id="a1">换一张</a>
+                    </td>
+                    <td valign="middle" align="left">
+                        <input type="text" class="inputgri" name="captcha" id="captcha"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td><span id="s1"></span></td>
+                </tr>
+            </table>
+            <p>
+                <input type="button" id="submit" class="button" value="Submit &raquo;"/>
+            </p>
+        </form>
+    </div>
+{% endblock %}
